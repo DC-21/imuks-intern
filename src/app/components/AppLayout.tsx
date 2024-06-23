@@ -1,13 +1,48 @@
 "use client";
 
-import React from "react";
-import { Layout, Menu } from "antd";
-import { FormOutlined, HomeOutlined, ProfileOutlined } from "@ant-design/icons";
+import React, { useState, useEffect } from "react";
+import { Layout, Menu, message } from "antd";
+import {
+  FormOutlined,
+  HomeOutlined,
+  ProfileOutlined,
+  LoadingOutlined,
+} from "@ant-design/icons";
 import Link from "next/link";
 
 const { Header, Content, Footer } = Layout;
 
 const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userInfo, setUserInfo] = useState<{
+    firstname: string;
+    lastname: string;
+  } | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        try {
+          const parsedUser = JSON.parse(storedUser);
+          setUserInfo(parsedUser);
+          setIsLoggedIn(true);
+        } catch (error) {
+          message.error("Failed to parse user information from localStorage");
+        }
+      }
+      setIsLoading(false);
+    }, 1000);
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setIsLoggedIn(false);
+    setUserInfo(null);
+    message.success("Logged out successfully");
+  };
   return (
     <Layout>
       <Header
@@ -17,7 +52,6 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           justifyContent: "space-between",
         }}
       >
-        {/* Logo */}
         <div style={{ flex: 1 }}>
           <Link
             href="/"
@@ -27,7 +61,6 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           </Link>
         </div>
 
-        {/* Centered Menu Items */}
         <Menu
           theme="dark"
           mode="horizontal"
@@ -45,7 +78,6 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           </Menu.Item>
         </Menu>
 
-        {/* Right-aligned Links */}
         <div
           style={{
             flex: 1,
@@ -54,12 +86,27 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             gap: "16px",
           }}
         >
-          <Link href="/signin" style={{ color: "#fff" }}>
-            Sign In
-          </Link>
-          <Link href="/signup" style={{ color: "#fff" }}>
-            Sign Up
-          </Link>
+          {isLoading ? (
+            <LoadingOutlined style={{ fontSize: 24, color: "#fff" }} />
+          ) : isLoggedIn ? (
+            <>
+              <span style={{ color: "#fff", marginRight: "16px" }}>
+                {userInfo?.firstname} {userInfo?.lastname}
+              </span>
+              <button onClick={handleLogout} style={{ color: "#fff" }}>
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link href="/signin" style={{ color: "#fff" }}>
+                Sign In
+              </Link>
+              <Link href="/signup" style={{ color: "#fff" }}>
+                Sign Up
+              </Link>
+            </>
+          )}
         </div>
       </Header>
       <Content style={{ padding: "0 50px", marginTop: 64 }}>

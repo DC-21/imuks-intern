@@ -1,15 +1,34 @@
 "use client";
-import { Form, Input, Select, Button, Typography, Card } from "antd";
+import { Form, Input, Select, Button, Typography, Card, message } from "antd";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 const { Title } = Typography;
 const { Option } = Select;
 
 const SigninForm: React.FC = () => {
   const [form] = Form.useForm();
+  const router = useRouter();
 
-  const onFinish = (values: any) => {
-    console.log("Received values:", values);
-    // Implement form submission logic here
+  const onFinish = async (values: any) => {
+    try {
+      const response = await axios.post("/api/signin", values);
+      message.success("Signup successful!");
+      const { token, user } = response.data;
+
+      // Store token and user data in localStorage
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+      form.resetFields();
+      console.log(response);
+      router.push("/");
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        message.error(error.response?.data?.message || "Signin failed!");
+      } else {
+        message.error("Signup failed!");
+      }
+    }
   };
 
   return (

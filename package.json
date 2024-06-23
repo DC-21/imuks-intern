@@ -10,20 +10,30 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.3.7",
+    "@prisma/client": "^5.15.1",
+    "@types/bcryptjs": "^2.4.6",
     "antd": "^5.18.3",
+    "axios": "^1.7.2",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.4.5",
+    "http-status-codes": "^2.3.0",
+    "jsonwebtoken": "^9.0.2",
     "next": "14.2.4",
+    "prisma": "^5.15.1",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "recoil": "^0.7.7"
   },
   "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.6",
     "@types/next": "^9.0.0",
-    "@types/node": "^20",
+    "@types/node": "^20.14.8",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "14.2.4",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5"
+    "typescript": "^5.5.2"
   }
 }

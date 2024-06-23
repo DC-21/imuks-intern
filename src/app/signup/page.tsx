@@ -1,15 +1,29 @@
 "use client";
-import { Form, Input, Select, Button, Typography, Card } from "antd";
+import { Form, Input, Select, Button, Typography, Card, message } from "antd";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 const { Title } = Typography;
 const { Option } = Select;
 
 const SignupForm: React.FC = () => {
   const [form] = Form.useForm();
+  const router = useRouter();
 
-  const onFinish = (values: any) => {
-    console.log("Received values:", values);
-    // Implement form submission logic here
+  const onFinish = async (values: any) => {
+    try {
+      const response = await axios.post("/api/signup", values);
+      message.success("Signup successful!");
+      form.resetFields();
+      console.log(response);
+      router.push("/signin");
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        message.error(error.response?.data?.message || "Signup failed!");
+      } else {
+        message.error("Signup failed!");
+      }
+    }
   };
 
   return (
@@ -32,7 +46,7 @@ const SignupForm: React.FC = () => {
         size="large"
       >
         <Form.Item
-          name="firstName"
+          name="firstname"
           label="First Name"
           rules={[{ required: true, message: "Please enter your first name!" }]}
         >
@@ -40,7 +54,7 @@ const SignupForm: React.FC = () => {
         </Form.Item>
 
         <Form.Item
-          name="lastName"
+          name="lastname"
           label="Last Name"
           rules={[{ required: true, message: "Please enter your last name!" }]}
         >
