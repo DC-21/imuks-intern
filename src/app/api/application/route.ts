@@ -15,6 +15,7 @@ export async function POST(req: NextRequest) {
                 jobtitle,
                 skills,
                 experience,
+                userId,
             } = await req.json();
 
             const newApplication = await prisma.applications.create({
@@ -28,6 +29,7 @@ export async function POST(req: NextRequest) {
                     jobtitle,
                     skills,
                     experience,
+                    userId
                 },
             });
 

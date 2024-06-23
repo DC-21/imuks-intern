@@ -30,16 +30,17 @@ enum StudentType {
 }
 
 model User {
-  id          Int     @unique @default(autoincrement())
-  firstname   String
-  lastname    String
-  email       String  @unique
-  password    String
-  institution String?
-  program     String?
-  year        String?
-  studentId   String? @unique
-  type        Type    @default(USER)
+  id           Int            @unique @default(autoincrement())
+  firstname    String
+  lastname     String
+  email        String         @unique
+  password     String
+  institution  String?
+  program      String?
+  year         String?
+  studentId    String?        @unique
+  type         Type           @default(USER)
+  applications Applications[]
 }
 
 model Applications {
@@ -51,7 +52,9 @@ model Applications {
   program     String
   education   StudentType
   jobtitle    String
-  skills      String[]
+  skills      String?
   experience  String
   status      Status      @default(PENDING)
+  User        User?       @relation(fields: [userId], references: [id])
+  userId      Int?
 }

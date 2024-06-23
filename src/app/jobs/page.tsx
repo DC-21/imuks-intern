@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { Card, Button, Form, Input, Select, Modal, Spin } from "antd";
+import { useRouter } from "next/navigation";
 
 const { Meta } = Card;
 const { Option } = Select;
@@ -9,7 +10,8 @@ const { Option } = Select;
 const JobListings: React.FC = () => {
   const [showApplyModal, setShowApplyModal] = useState(false);
   const [selectedJob, setSelectedJob] = useState<string>("");
-  const [loading, setLoading] = useState(false); // State to manage loading state of form submission
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const handleApplyClick = (jobTitle: string) => {
     setSelectedJob(jobTitle);
@@ -17,15 +19,22 @@ const JobListings: React.FC = () => {
   };
 
   const onFinish = async (values: any) => {
-    setLoading(true); // Start loading state on form submission
+    setLoading(true);
 
     try {
+      // Retrieve userId from local storage
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+      const userId = user.id;
+      if (!userId) {
+        throw new Error("User not logged in");
+      }
+
       const response = await fetch("/api/application", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(values),
+        body: JSON.stringify({ ...values, userId: Number(userId) }), // Include userId in the request body
       });
 
       if (!response.ok) {
@@ -33,12 +42,13 @@ const JobListings: React.FC = () => {
       }
 
       alert("Application submitted successfully!");
+      router.push("/applications");
     } catch (error) {
       console.error("Error submitting application:", error);
       alert("Failed to submit application");
     } finally {
-      setLoading(false); // Stop loading state after submission attempt (whether success or failure)
-      setShowApplyModal(false); // Close modal on submission attempt completion
+      setLoading(false);
+      setShowApplyModal(false);
     }
   };
 
@@ -160,7 +170,6 @@ const JobListings: React.FC = () => {
         />
       </Card>
 
-      {/* Apply Modal */}
       <Modal
         title={`Apply for ${selectedJob}`}
         visible={showApplyModal}
