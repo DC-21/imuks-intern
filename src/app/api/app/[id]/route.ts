@@ -28,7 +28,7 @@ export async function GET(req: NextRequest, context: any) {
         return NextResponse.json({
             applications,
         });
-    } catch (error) {
+    } catch (error:any) {
         console.error('Error fetching applications:', error);
 
         // Return error response
