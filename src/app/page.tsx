@@ -1,3 +1,7 @@
+/* eslint-disable react/no-unescaped-entities */
+
+"use client";
+
 import { Layout } from "antd";
 import Image from "next/image";
 
