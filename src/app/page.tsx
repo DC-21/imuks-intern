@@ -24,9 +24,9 @@ const Home = () => {
             Find Your Dream Job
           </h1>
           <p className="text-lg mb-4">
-            Discover exciting opportunities in various industries. Whether
-            you're a seasoned professional or just starting out, we have
-            something for everyone.
+            Discover exciting opportunities in various industries. Whether you
+            are a seasoned professional or just starting out, we have something
+            for everyone.
           </p>
           <a
             href="/jobs"
